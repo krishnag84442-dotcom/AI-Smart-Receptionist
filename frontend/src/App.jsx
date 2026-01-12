@@ -10,6 +10,11 @@ function App() {
   const [sessionId, setSessionId] = useState(() => `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`)
   const messagesEndRef = useRef(null)
 
+  // API URL - use production backend in production, localhost in development
+  const API_URL = process.env.NODE_ENV === 'production'
+    ? 'https://ai-smart-receptionist.onrender.com'
+    : '/api'
+
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
   }
@@ -35,12 +40,12 @@ function App() {
     setLoading(true)
 
     try {
-      const response = await fetch('/api/chat', {
+      const response = await fetch(`${API_URL}/chat`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ 
+        body: JSON.stringify({
           message: input.trim(),
           session_id: sessionId
         }),
