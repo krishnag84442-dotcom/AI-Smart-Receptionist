@@ -63,7 +63,14 @@ async def chat(request: ChatRequest):
 async def health():
     return {"status": "ok"}
 
+# For production deployment (Render, etc.)
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    port = int(os.getenv("PORT", 8000))
+    host = os.getenv("HOST", "0.0.0.0")
+    print(f"Starting FastAPI server on {host}:{port}")
+    uvicorn.run(app, host=host, port=port)
+
+# Export app for uvicorn/gunicorn
+__all__ = ["app"]
 
